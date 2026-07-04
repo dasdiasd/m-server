@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serwer Minecraft - Oficjalna Strona</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            line-height: 1.6;
+            text-align: center;
+        }
+        header {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1605899435973-ca2d1a8861cf?q=80&w=1000') center/cover;
+            padding: 4rem 1rem;
+            border-bottom: 4px solid #5c8e32;
+        }
+        h1 {
+            font-size: 3rem;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            margin-bottom: 0.5rem;
+        }
+        .subtitle {
+            color: #aaa;
+            font-size: 1.2rem;
+        }
+        
+        /* Menu nawigacyjne */
+        nav {
+            background: #1a1a1a;
+            padding: 1rem;
+            border-bottom: 1px solid #333;
+        }
+        nav button {
+            background: none;
+            border: none;
+            color: #aaa;
+            font-size: 1.1rem;
+            font-weight: bold;
+            padding: 0.5rem 1.5rem;
+            margin: 0 0.5rem;
+            cursor: pointer;
+            transition: color 0.2s, border-bottom 0.2s;
+        }
+        nav button:hover, nav button.active {
+            color: #5c8e32;
+        }
+        nav button.active {
+            border-bottom: 2px solid #5c8e32;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 3rem auto;
+            padding: 2rem;
+            background: #1e1e1e;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+            text-align: left; /* Zmiana na wyrównanie do lewej dla lepszego czytania tekstu */
+        }
+        
+        .center-content {
+            text-align: center;
+        }
+
+        .ip-box {
+            background: #2a2a2a;
+            padding: 1rem;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 1.5rem;
+            color: #5c8e32;
+            margin: 1.5rem 0;
+            border: 1px solid #333;
+            cursor: pointer;
+            text-align: center;
+            transition: background 0.2s;
+        }
+        .ip-box:hover {
+            background: #333;
+        }
+        .status {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+        }
+        .online {
+            background-color: #2e7d32;
+            color: #fff;
+            box-shadow: 0 0 10px rgba(46, 125, 50, 0.5);
+        }
+        .offline {
+            background-color: #c62828;
+            color: #fff;
+            box-shadow: 0 0 10px rgba(198, 40, 40, 0.5);
+        }
+        .technic {
+            background-color: #ef6c00;
+            color: #fff;
+            box-shadow: 0 0 10px rgba(239, 108, 0, 0.5);
+        }
+        .info-text {
+            color: #bbb;
+            font-size: 1rem;
+        }
+        
+        /* Style sekcji Informacje */
+        h2 {
+            color: #fff;
+            border-bottom: 2px solid #333;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            margin-top: 1.5rem;
+        }
+        ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        li {
+            margin-bottom: 0.5rem;
+            color: #ccc;
+        }
+        
+        /* Lista ekipy */
+        .rank-title {
+            font-weight: bold;
+            margin-top: 1rem;
+            font-size: 1.1rem;
+        }
+        .admin-color { color: #c62828; }
+        .mod-color { color: #1565c0; }
+        .helper-color { color: #2e7d32; }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .team-member {
+            background: #2a2a2a;
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 1rem;
+        }
+
+        /* Ukrywanie zakładek */
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+
+        footer {
+            margin-top: 4rem;
+            padding: 2rem;
+            color: #555;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Serwer Minecraft</h1>
+        <p class="subtitle">Dołącz do wspólnej przygody!</p>
+    </header>
+
+    <!-- Menu z zakładkami -->
+    <nav>
+        <button id="btn-glowna" class="active" onclick="switchPage('glowna')">Główna</button>
+        <button id="btn-info" onclick="switchPage('info')">Informacje</button>
+    </nav>
+
+    <!-- STRONA GŁÓWNA -->
+    <div id="page-glowna" class="container page active center-content">
+        <div id="server-status" class="status online">Online</div>
+        
+        <div id="ip-section">
+            <p>Adres IP serwera:</p>
+            <div class="ip-box" onclick="copyIP()">localhost</div>
+            <p class="info-text">(Kliknij na IP, aby skopiować)</p>
+        </div>
+    </div>
+
+    <!-- STRONA INFORMACJE -->
+    <div id="page-info" class="container page">
+        <h2>Regulamin(do poprawki)</h2>
+        <ol>
+            <li>Zakaz używania jakichkolwiek cheatów, skryptów i modyfikacji dających przewagę (np. X-Ray).</li>
+            <li>Szanuj innych graczy na czacie. Obrażanie, prowokowanie i floodowanie będzie karane.</li>
+            <li>Zakaz niszczenia (griefowania) oraz okradania budowli należących do innych graczy.</li>
+            <li>Wszelkie błędy gry lub serwera należy natychmiast zgłaszać administracji. Wykorzystywanie błędów grozi banem.</li>
+            <li>Administracja ma zawsze ostateczny głos w sporach między graczami.</li>
+        </ol>
+
+        <h2>Ekipa serwera (Administracja & Moderatorzy)</h2>
+        
+        <p class="rank-title admin-color">Właściciele / Administratorzy:</p>
+        <div class="team-grid">
+            <div class="team-member">1. [Nick_Tutaj]</div>
+            <div class="team-member">2. [Nick_Tutaj]</div>
+            <div class="team-member">3. [Nick_Tutaj]</div>
+            <div class="team-member">4. [Nick_Tutaj]</div>
+            <div class="team-member">5. [Nick_Tutaj]</div>
+        </div>
+
+        <p class="rank-title mod-color">Moderatorzy:</p>
+        <div class="team-grid">
+            <div class="team-member">6. [Nick_Tutaj]</div>
+            <div class="team-member">7. [Nick_Tutaj]</div>
+            <div class="team-member">8. [Nick_Tutaj]</div>
+            <div class="team-member">9. [Nick_Tutaj]</div>
+            <div class="team-member">10. [Nick_Tutaj]</div>
+            <div class="team-member">11. [Nick_Tutaj]</div>
+            <div class="team-member">12. [Nick_Tutaj]</div>
+            <div class="team-member">13. [Nick_Tutaj]</div>
+            <div class="team-member">14. [Nick_Tutaj]</div>
+            <div class="team-member">15. [Nick_Tutaj]</div>
+        </div>
+
+        <p class="rank-title helper-color">Technicy:</p>
+        <div class="team-grid">
+            <div class="team-member">16. 9o_o9ll</div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Serwer Minecraft. Strona stworzona dla zabawy.</p>
+    </footer>
+
+    <script>
+        // ===================================================
+        // USTAW STATUS SERWERA: "online" , "offline" lub "technic"
+        // ===================================================
+        const statusSerwera = "online"; 
+
+        const statusDiv = document.getElementById('server-status');
+        const ipSection = document.getElementById('ip-section');
+
+        if (statusSerwera === "online") {
+            statusDiv.textContent = "Online";
+            statusDiv.className = "status online";
+            ipSection.style.display = "block";
+        } 
+        else if (statusSerwera === "offline") {
+            statusDiv.textContent = "Offline";
+            statusDiv.className = "status offline";
+            ipSection.innerHTML = "<p class='info-text' style='font-size: 1.3rem; margin-top: 1rem;'>Serwer jest obecnie wyłączony. Zapraszamy później!</p>";
+        } 
+        else if (statusSerwera === "technic") {
+            statusDiv.textContent = "Przerwa techniczna";
+            statusDiv.className = "status technic";
+            ipSection.innerHTML = "<p class='info-text' style='font-size: 1.3rem; margin-top: 1rem;'>Aktualnie trwają prace techniczne. Ulepszamy serwer dla Was!</p>";
+        }
+
+        // Funkcja do przełączania podstron (Główna / Informacje)
+        function switchPage(pageName) {
+            // Ukryj obie strony i zabierz klasę active z przycisków
+            document.getElementById('page-glowna').classList.remove('active');
+            document.getElementById('page-info').classList.remove('active');
+            document.getElementById('btn-glowna').classList.remove('active');
+            document.getElementById('btn-info').classList.remove('active');
+
+            // Pokaż wybraną stronę i aktywuj przycisk
+            document.getElementById('page-' + pageName).classList.add('active');
+            document.getElementById('btn-' + pageName).classList.add('active');
+        }
+
+        function copyIP() {
+            navigator.clipboard.writeText('localhost');
+            alert('Skopiowano IP: localhost');
+        }
+    </script>
+
+</body>
+</html>
